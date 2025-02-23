@@ -1,3 +1,4 @@
+//import React from 'react';
 import { Sparkles, Smile } from 'lucide-react';
 import './App.css';
 
@@ -9,6 +10,7 @@ function App() {
           <span className="title-welcome">Welcome to </span>
           <span className="title-zenara">Zenara</span>
         </h1>
+        
         <p className="description">
           Choose your path to enlightenment and discover a world of mindful learning and joyful growth
         </p>

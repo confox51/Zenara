@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import { Mic, X, Play } from 'lucide-react';
+
+import React, { useState, useRef } from 'react';
+import { Mic, X, Play, Music } from 'lucide-react';
 import './Happy.css';
 
 interface ModalProps {
@@ -54,6 +55,9 @@ export default function Happy() {
   const [selectedMood, setSelectedMood] = useState<string | null>(null);
   const [selectedVoice, setSelectedVoice] = useState<string | null>(null);
   const [isVoiceModalOpen, setIsVoiceModalOpen] = useState(false);
+  const [showAudio, setShowAudio] = useState(false);
+  const [audioError, setAudioError] = useState<string | null>(null);
+  const audioRef = useRef<HTMLAudioElement>(null);
 
   const moods = [
     { emoji: '😊', label: 'Happy' },
@@ -61,12 +65,39 @@ export default function Happy() {
     { emoji: '😔', label: 'Sad' },
   ];
 
+  const handleAudioError = (e: React.SyntheticEvent<HTMLAudioElement, Event>) => {
+    console.error('Audio playback error:', e);
+    setAudioError('Failed to load or play audio');
+  };
+
   const startMeditation = () => {
-    // Handle meditation start logic
-    console.log('Starting meditation with:', {
-      mood: selectedMood,
-      voice: selectedVoice,
-    });
+    if (!selectedMood || !selectedVoice) return;
+    
+    setShowAudio(true);
+    setAudioError(null);
+    
+    setTimeout(() => {
+      if (audioRef.current) {
+        const playPromise = audioRef.current.play();
+        
+        if (playPromise !== undefined) {
+          playPromise.catch(error => {
+            console.error('Playback error:', error);
+            setAudioError('Unable to start playback');
+          });
+        }
+      }
+    }, 500);
+  };
+
+  const getMeditationTitle = () => {
+    if (!selectedMood) return '';
+    const moodMap = {
+      'Happy': 'Gratitude Meditation',
+      'Neutral': 'Mindfulness Meditation',
+      'Sad': 'Healing Meditation'
+    };
+    return moodMap[selectedMood as keyof typeof moodMap];
   };
 
   return (
@@ -105,6 +136,27 @@ export default function Happy() {
           <Play size={20} />
           Start Meditation
         </button>
+
+        {showAudio && (
+          <div className="audio-section">
+            <div className="audio-title">
+              <Music size={20} />
+              {getMeditationTitle()}
+            </div>
+            <audio 
+              ref={audioRef}
+              className="audio-player"
+              controls
+              onError={handleAudioError}
+              src="/audio/meditation.mp3"
+            >
+              Your browser does not support the audio element.
+            </audio>
+            {audioError && (
+              <div className="error-message">{audioError}</div>
+            )}
+          </div>
+        )}
       </div>
 
       <VoiceModal
@@ -116,3 +168,4 @@ export default function Happy() {
     </div>
   );
 }
+
