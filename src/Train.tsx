@@ -125,7 +125,7 @@ export default function Train() {
         </section>
       </div>
 
-      <div className="side-label">Pull for AI Help</div>
+      <div className="side-label"></div>
 
       <Modal
         isOpen={modalConfig.isOpen}
