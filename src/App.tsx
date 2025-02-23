@@ -1,4 +1,3 @@
-import React from 'react';
 import { Sparkles, Smile } from 'lucide-react';
 import './App.css';
 
