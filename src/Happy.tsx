@@ -1,13 +1,20 @@
 
-import React, { useState, useRef } from 'react';
-import { Mic, X, Play, Music } from 'lucide-react';
+import React, { useState, useEffect , useRef} from 'react';
+import { Mic, X, Play } from 'lucide-react';
+
 import './Happy.css';
 
 interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
   selectedVoice: string | null;
-  onVoiceSelect: (voice: string) => void;
+  onVoiceSelect: (voice: { id: string, name: string }) => void;
+}
+
+interface Voice {
+  voice_id: string;
+  name: string;
+  preview_url?: string;
 }
 
 const VoiceModal: React.FC<ModalProps> = ({ 
@@ -16,11 +23,42 @@ const VoiceModal: React.FC<ModalProps> = ({
   selectedVoice, 
   onVoiceSelect 
 }) => {
-  const voices = [
-    { id: 'john', name: 'John' },
-    { id: 'sabrina', name: 'Sabrina' },
-    { id: 'rahul', name: 'Rahul' },
-  ];
+  const [voices, setVoices] = useState<Voice[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchVoices = async () => {
+      try {
+        const response = await fetch('https://api.elevenlabs.io/v1/voices', {
+          method: 'GET',
+          headers: {
+            'Accept': 'application/json',
+            'xi-api-key': import.meta.env.VITE_ELEVEN_LABS_API_KEY || ''
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch voices');
+        }
+
+        const data = await response.json();
+        const allowedVoiceNames = ['Aria', 'Shreyas', 'Female Meditation Teacher'];
+        const filteredVoices = data.voices.filter((voice: Voice) => 
+          allowedVoiceNames.includes(voice.name)
+        );
+        setVoices(filteredVoices);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Failed to fetch voices');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    if (isOpen) {
+      fetchVoices();
+    }
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
@@ -32,17 +70,30 @@ const VoiceModal: React.FC<ModalProps> = ({
         </button>
         <h3>Select a Voice</h3>
         <div className="voice-list">
-          {voices.map(voice => (
+          {isLoading && <div>Loading voices...</div>}
+          {error && <div className="error-message">{error}</div>}
+          {!isLoading && !error && voices.map(voice => (
             <div
-              key={voice.id}
-              className={`voice-option ${selectedVoice === voice.id ? 'selected' : ''}`}
+              key={voice.voice_id}
+              className={`voice-option ${selectedVoice === voice.voice_id ? 'selected' : ''}`}
               onClick={() => {
-                onVoiceSelect(voice.id);
+                onVoiceSelect({ id: voice.voice_id, name: voice.name });
                 onClose();
               }}
             >
               <Mic size={20} />
               <span>{voice.name}</span>
+              {voice.preview_url && (
+                <button 
+                  className="preview-button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    new Audio(voice.preview_url).play();
+                  }}
+                >
+                  <Play size={16} />
+                </button>
+              )}
             </div>
           ))}
         </div>
@@ -53,11 +104,11 @@ const VoiceModal: React.FC<ModalProps> = ({
 
 export default function Happy() {
   const [selectedMood, setSelectedMood] = useState<string | null>(null);
-  const [selectedVoice, setSelectedVoice] = useState<string | null>(null);
+  const [selectedVoice, setSelectedVoice] = useState<{ id: string, name: string } | null>(null);
   const [isVoiceModalOpen, setIsVoiceModalOpen] = useState(false);
-  const [showAudio, setShowAudio] = useState(false);
-  const [audioError, setAudioError] = useState<string | null>(null);
-  const audioRef = useRef<HTMLAudioElement>(null);
+
+  const [audioUrl, setAudioUrl] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const moods = [
     { emoji: '😊', label: 'Happy' },
@@ -65,39 +116,55 @@ export default function Happy() {
     { emoji: '😔', label: 'Sad' },
   ];
 
-  const handleAudioError = (e: React.SyntheticEvent<HTMLAudioElement, Event>) => {
-    console.error('Audio playback error:', e);
-    setAudioError('Failed to load or play audio');
+
+  const generateSpeech = async () => {
+    if (!selectedVoice) return;
+    
+    setIsLoading(true);
+    try {
+      const meditationText = "Welcome to your meditation session. Take a deep breath, and let's begin this journey together. Find a comfortable position, and gently close your eyes. Feel the tension leaving your body with each breath.";
+      
+      const response = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${selectedVoice.id}`, {
+        method: 'POST',
+        headers: {
+          'Accept': 'audio/mpeg',
+          'Content-Type': 'application/json',
+          'xi-api-key': import.meta.env.VITE_ELEVEN_LABS_API_KEY || ''
+        },
+        body: JSON.stringify({
+          text: meditationText,
+          model_id: "eleven_multilingual_v2",
+          voice_settings: {
+            stability: 0.75,
+            similarity_boost: 0.75
+          }
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to generate speech');
+      }
+
+      const blob = await response.blob();
+      const url = URL.createObjectURL(blob);
+      setAudioUrl(url);
+      
+      // Play the audio
+      const audio = new Audio(url);
+      audio.play();
+    } catch (error) {
+      console.error('Error generating speech:', error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const startMeditation = () => {
-    if (!selectedMood || !selectedVoice) return;
-    
-    setShowAudio(true);
-    setAudioError(null);
-    
-    setTimeout(() => {
-      if (audioRef.current) {
-        const playPromise = audioRef.current.play();
-        
-        if (playPromise !== undefined) {
-          playPromise.catch(error => {
-            console.error('Playback error:', error);
-            setAudioError('Unable to start playback');
-          });
-        }
-      }
-    }, 500);
-  };
-
-  const getMeditationTitle = () => {
-    if (!selectedMood) return '';
-    const moodMap = {
-      'Happy': 'Gratitude Meditation',
-      'Neutral': 'Mindfulness Meditation',
-      'Sad': 'Healing Meditation'
-    };
-    return moodMap[selectedMood as keyof typeof moodMap];
+    generateSpeech();
+    console.log('Starting meditation with:', {
+      mood: selectedMood,
+      voice: selectedVoice?.id,
+    });
   };
 
   return (
@@ -124,37 +191,30 @@ export default function Happy() {
             onClick={() => setIsVoiceModalOpen(true)}
           >
             <Mic size={20} />
-            {selectedVoice ? `Voice: ${selectedVoice}` : 'Pick a Voice'}
+            {selectedVoice ? `Voice: ${selectedVoice.name}` : 'Pick a Voice'}
           </button>
         </div>
 
         <button 
           className="meditation-button"
           onClick={startMeditation}
-          disabled={!selectedMood || !selectedVoice}
+          disabled={!selectedMood || !selectedVoice || isLoading}
         >
-          <Play size={20} />
-          Start Meditation
+          {isLoading ? (
+            'Generating audio...'
+          ) : (
+            <>
+              <Play size={20} />
+              Start Meditation
+            </>
+          )}
         </button>
 
-        {showAudio && (
-          <div className="audio-section">
-            <div className="audio-title">
-              <Music size={20} />
-              {getMeditationTitle()}
-            </div>
-            <audio 
-              ref={audioRef}
-              className="audio-player"
-              controls
-              onError={handleAudioError}
-              src="/audio/meditation.mp3"
-            >
+        {audioUrl && (
+          <div className="audio-player" style={{ marginTop: '20px' }}>
+            <audio controls src={audioUrl}>
               Your browser does not support the audio element.
             </audio>
-            {audioError && (
-              <div className="error-message">{audioError}</div>
-            )}
           </div>
         )}
       </div>
@@ -162,8 +222,8 @@ export default function Happy() {
       <VoiceModal
         isOpen={isVoiceModalOpen}
         onClose={() => setIsVoiceModalOpen(false)}
-        selectedVoice={selectedVoice}
-        onVoiceSelect={setSelectedVoice}
+        selectedVoice={selectedVoice?.id || null}
+        onVoiceSelect={(voice) => setSelectedVoice(voice)}
       />
     </div>
   );
