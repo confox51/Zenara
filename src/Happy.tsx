@@ -1,5 +1,7 @@
-import React, { useState, useEffect } from 'react';
+
+import React, { useState, useEffect , useRef} from 'react';
 import { Mic, X, Play } from 'lucide-react';
+
 import './Happy.css';
 
 interface ModalProps {
@@ -104,6 +106,7 @@ export default function Happy() {
   const [selectedMood, setSelectedMood] = useState<string | null>(null);
   const [selectedVoice, setSelectedVoice] = useState<{ id: string, name: string } | null>(null);
   const [isVoiceModalOpen, setIsVoiceModalOpen] = useState(false);
+
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -112,6 +115,7 @@ export default function Happy() {
     { emoji: '😐', label: 'Neutral' },
     { emoji: '😔', label: 'Sad' },
   ];
+
 
   const generateSpeech = async () => {
     if (!selectedVoice) return;
@@ -224,3 +228,4 @@ export default function Happy() {
     </div>
   );
 }
+

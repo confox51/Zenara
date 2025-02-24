@@ -1,160 +1,194 @@
-/* Happy.css */
+
 .happy-container {
-    min-height: 100vh;
-    background-color: #FEFEFE;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  }
-  
-  .content-wrapper {
-    max-width: 600px;
-    width: 100%;
-    padding: 2rem;
-    text-align: center;
-  }
-  
-  .question {
-    font-size: 2rem;
-    font-weight: 600;
-    color: #2D3748;
-    margin-bottom: 3rem;
-  }
-  
-  .emoji-grid {
-    display: flex;
-    justify-content: center;
-    gap: 2rem;
-    margin-bottom: 3rem;
-  }
-  
-  .emoji-option {
-    cursor: pointer;
-    transition: transform 0.2s ease;
-    padding: 1rem;
-    border-radius: 12px;
-    border: 2px solid transparent;
-  }
-  
-  .emoji-option:hover {
-    transform: scale(1.1);
-  }
-  
-  .emoji-option.selected {
-    border-color: #5B5BF9;
-    background-color: #F0F0FF;
-  }
-  
-  .emoji {
-    font-size: 4rem;
-    margin-bottom: 0.5rem;
-  }
-  
-  .emoji-label {
-    font-size: 1rem;
-    color: #4A5568;
-  }
-  
-  .voice-section {
-    margin-bottom: 3rem;
-  }
-  
-  .voice-button {
-    background-color: white;
-    border: 1px solid #E2E8F0;
-    padding: 1rem 2rem;
-    border-radius: 12px;
-    font-size: 1rem;
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    cursor: pointer;
-    margin: 0 auto;
-    transition: all 0.2s ease;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-  }
-  
-  .voice-button:hover {
-    border-color: #5B5BF9;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  }
-  
-  .meditation-button {
-    background-color: #5B5BF9;
-    color: white;
-    padding: 1rem 2rem;
-    border-radius: 12px;
-    font-size: 1.125rem;
-    font-weight: 500;
-    border: none;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    margin: 0 auto;
-    transition: all 0.2s ease;
-  }
-  
-  .meditation-button:hover {
-    background-color: #4A4AE8;
-    transform: translateY(-2px);
-  }
-  
-  /* Modal Styles */
-  .modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-  }
-  
-  .modal-content {
-    background: white;
-    padding: 2rem;
-    border-radius: 12px;
-    width: 90%;
-    max-width: 400px;
-    position: relative;
-  }
-  
-  .modal-close {
-    position: absolute;
-    top: 1rem;
-    right: 1rem;
-    cursor: pointer;
-    background: none;
-    border: none;
-    padding: 0;
-    color: #4A5568;
-  }
-  
-  .voice-list {
-    margin-top: 1.5rem;
-  }
-  
-  .voice-option {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    padding: 1rem;
-    cursor: pointer;
-    border-radius: 8px;
-    transition: background-color 0.2s ease;
-  }
-  
-  .voice-option:hover {
-    background-color: #F7FAFC;
-  }
-  
-  .voice-option.selected {
-    background-color: #F0F0FF;
-    color: #5B5BF9;
-  }
+  min-height: 100vh;
+  background-color: #FEFEFE;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.content-wrapper {
+  max-width: 600px;
+  width: 100%;
+  padding: 2rem;
+  text-align: center;
+}
+
+.question {
+  font-size: 2rem;
+  font-weight: 600;
+  color: #2D3748;
+  margin-bottom: 3rem;
+}
+
+.emoji-grid {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin-bottom: 3rem;
+}
+
+.emoji-option {
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  padding: 1rem;
+  border-radius: 12px;
+  border: 2px solid transparent;
+}
+
+.emoji-option:hover {
+  transform: scale(1.1);
+}
+
+.emoji-option.selected {
+  border-color: #5B5BF9;
+  background-color: #F0F0FF;
+}
+
+.emoji {
+  font-size: 4rem;
+  margin-bottom: 0.5rem;
+}
+
+.emoji-label {
+  font-size: 1rem;
+  color: #4A5568;
+}
+
+.voice-section {
+  margin-bottom: 3rem;
+}
+
+.voice-button {
+  background-color: white;
+  border: 1px solid #E2E8F0;
+  padding: 1rem 2rem;
+  border-radius: 12px;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  cursor: pointer;
+  margin: 0 auto;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.voice-button:hover {
+  border-color: #5B5BF9;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.meditation-button {
+  background-color: #5B5BF9;
+  color: white;
+  padding: 1rem 2rem;
+  border-radius: 12px;
+  font-size: 1.125rem;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0 auto;
+  transition: all 0.2s ease;
+}
+
+.meditation-button:hover {
+  background-color: #4A4AE8;
+  transform: translateY(-2px);
+}
+
+.meditation-button:disabled {
+  background-color: #A0AEC0;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.audio-section {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  background-color: #F7FAFC;
+  border-radius: 12px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.audio-title {
+  font-size: 1.125rem;
+  color: #4A5568;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+.audio-player {
+  width: 100%;
+  height: 40px;
+}
+
+.error-message {
+  color: #E53E3E;
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 400px;
+  position: relative;
+}
+
+.modal-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0;
+  color: #4A5568;
+}
+
+.voice-list {
+  margin-top: 1.5rem;
+}
+
+.voice-option {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: background-color 0.2s ease;
+}
+
+.voice-option:hover {
+  background-color: #F7FAFC;
+}
+
+.voice-option.selected {
+  background-color: #F0F0FF;
+  color: #5B5BF9;
+}

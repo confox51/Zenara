@@ -1,45 +1,45 @@
+/* src/App.css */
 .main {
   min-height: 100vh;
-  background-color: #F8F8FF;
+  background-color: #FEFEFE;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 20px;
+  padding: 2rem;
 }
 
 .container {
-  max-width: 800px;
   width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.content {
+  max-width: 800px;
+  margin: 0 auto;
   text-align: center;
 }
 
 .title {
-  font-size: 48px;
+  font-size: 2.5rem;
   font-weight: bold;
-  margin-bottom: 20px;
-}
-
-.title-welcome {
-  color: #5B5BF9;
-}
-
-.title-zenara {
-  color: #00A896;
+  color: #000;
+  margin-bottom: 1rem;
 }
 
 .description {
-  color: #666;
-  font-size: 18px;
-  line-height: 1.5;
-  margin-bottom: 40px;
+  font-size: 1.125rem;
+  color: #333;
+  margin-bottom: 2rem;
   max-width: 600px;
+  line-height: 1.5;
   margin-left: auto;
   margin-right: auto;
 }
 
-.button-container {
+.button-group {
   display: flex;
-  gap: 16px;
+  gap: 1rem;
   justify-content: center;
   flex-wrap: wrap;
 }
@@ -47,16 +47,14 @@
 .button {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  padding: 12px 24px;
-  border-radius: 8px;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: 1.5rem;
+  font-size: 1rem;
   font-weight: 500;
-  font-size: 16px;
-  color: white;
-  border: none;
-  cursor: pointer;
   text-decoration: none;
-  transition: transform 0.2s;
+  color: white;
+  transition: transform 0.2s ease;
 }
 
 .button:hover {
@@ -64,14 +62,48 @@
 }
 
 .button-train {
-  background-color: #5B5BF9;
+  background-color: #6366F1;
+}
+
+.button-train:hover {
+  background-color: #4F46E5;
 }
 
 .button-happy {
-  background-color: #00A896;
+  background-color: #3498db;
+}
+
+.button-happy:hover {
+  background-color: #2980b9;
 }
 
 .icon {
-  width: 20px;
-  height: 20px;
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .main {
+    padding: 1rem;
+  }
+
+  .title {
+    font-size: 2rem;
+  }
+
+  .description {
+    font-size: 1rem;
+  }
+
+  .button-group {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .button {
+    width: 100%;
+    max-width: 300px;
+    justify-content: center;
+  }
 }
